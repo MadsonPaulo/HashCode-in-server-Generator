@@ -17,6 +17,36 @@ import java.net.Socket;
  * manual do servidor. Caso seja rodado no console Java, normalmente o atalho
  * Ctrl+C irá encerrar o processo.
  */
+
+/**
+ * PROTOCOLO
+ * 
+ * FLUXO DE COMUNICAÇÃO
+ * 
+ * Primeiro o servidor deverá ser iniciado. Após isso, incontáveis clientes
+ * podem ser conectados ao servidor ao mesmo tempo, cada um com uma instância de
+ * Cliente.
+ * 
+ * Ao instanciar um cliente, ele irá pedir o endereço Ipv4 do servidor para
+ * poder conectar-se. Se o usuário informar um endereço inválido, receberá uma
+ * notificação de erro, e poderá digitar o endereço Ipv4 do servidor incontáveis
+ * vezes até desistir ou informar o endereço correto.
+ * 
+ * Após informar o endereço correto, será criada a conexão entre o cliente e o
+ * servidor num socket único, na porta 9898, permitindo a troca de mensagens.
+ * 
+ * AÇÕES
+ * 
+ * O cliente pode enviar incontáveis mensagens de texto para o servidor enquanto
+ * estiver conectado;
+ * 
+ * O servidor retorna o valor correspondente à mensagem recebida em hashCode
+ * para o cliente;
+ * 
+ * O cliente pode encerrar a conexão enviando uma mensagem contendo somente um
+ * ponto (".").
+ * 
+ */
 public class ServidorHash {
 
 	/**
