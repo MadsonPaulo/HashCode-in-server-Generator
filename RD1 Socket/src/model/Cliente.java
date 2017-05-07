@@ -41,7 +41,7 @@ public class Cliente {
 
 		// layout
 		campoDeTexto.setFont(new Font(Font.MONOSPACED, Font.BOLD, 12));
-		campoDeTexto.setBackground(Color.BLACK);
+		campoDeTexto.setBackground(Color.GRAY);
 		campoDeTexto.setForeground(Color.GREEN);
 		areaDeMensagens.setEditable(false);
 		areaDeMensagens.setMargin(new Insets(10, 10, 10, 10));
@@ -63,7 +63,7 @@ public class Cliente {
 			public void actionPerformed(ActionEvent e) {
 				// envia o comando escrito na caixa de texto
 				out.println(campoDeTexto.getText());
-				if (campoDeTexto.getText().equals("desconectar")) {
+				if (campoDeTexto.getText().equalsIgnoreCase("desconectar")) {
 					// O servidor finaliza a conexão ao receber o comando. Aqui,
 					// apenas a instância de Cliente é encerrada
 					System.exit(0);

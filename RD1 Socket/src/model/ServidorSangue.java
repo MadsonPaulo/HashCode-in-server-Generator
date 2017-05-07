@@ -46,8 +46,6 @@ import java.util.Arrays;
  * Segue a lista de comandos que o cliente pode enviar ao servidor, e o retorno
  * que o servidor irá entregar ao cliente:
  * 
- * Comandos válidos:
- * 
  * 'comandos' : Lista todos os comandos válidos do sistema;
  * 
  * 'listar tudo' : Lista todos os dados do sistema;
@@ -69,7 +67,30 @@ import java.util.Arrays;
  * 
  * 'desconectar' : encerra a conexão com o servidor.
  * 
- * Os valores válidos para TIPO são: O+, O-, A+, A-, B+, B-, AB+, AB-
+ * Os valores válidos para TIPO são: O+, O-, A+, A-, B+, B-, AB+ e AB-.
+ * 
+ * ERROS
+ * 
+ * Segue a lista de códigos de erro que o servidor envia para o cliente quando
+ * algum erro ocorre:
+ * 
+ * Erro 401: Não foi possível completar a operação. Motivo não identificado.
+ * 
+ * Erro 402: Comando não reconhecido. Digite 'comandos' para ver os comandos
+ * válidos.
+ * 
+ * Erro 501: Não foi possível completar a operação. Provavelmente o valor a ser
+ * removido é maior do que o estoque deste tipo sanguíneo no banco de dados.
+ * 
+ * Erro 502: O valor precisa ser maior que 0.
+ * 
+ * Erro 503: O valor informado é inválido.
+ * 
+ * Erro 504: Tipo de sangue não reconhecido. Digite 'comandos' para ver os tipos
+ * válidos.
+ * 
+ * Erro 505: Aparentemente a vírgula está faltando. Padrão: 'adicionar/remover
+ * TIPO, VALOR'.
  * 
  */
 public class ServidorSangue {
@@ -125,6 +146,15 @@ public class ServidorSangue {
 					+ "\n'desconectar' : encerra a conexão com o servidor."
 					+ "\nOs valores válidos para TIPO são: O+, O-, A+, A-, B+, B-, AB+, AB-\n";
 
+			String erro401 = "Erro 401: Não foi possível completar a operação. Motivo não identificado.\n";
+			String erro402 = "Erro 402: Comando não reconhecido. Digite 'comandos' para ver os comandos válidos.\n";
+			String erro501 = "Erro 501: Não foi possível completar a operação. Provavelmente o valor a ser removido é maior "
+					+ "do que o estoque deste tipo sanguíneo no banco de dados.\n";
+			String erro502 = "Erro 502: O valor precisa ser maior que 0.\n";
+			String erro503 = "Erro 503: O valor informado é inválido.\n";
+			String erro504 = "Erro 504: Tipo de sangue não reconhecido. Digite 'comandos' para ver os tipos válidos.\n";
+			String erro505 = "Erro 505: Aparentemente a vírgula está faltando. Padrão: 'adicionar/remover TIPO, VALOR'.\n";
+
 			try {
 				// lê as entradas de String do cliente
 				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -140,17 +170,17 @@ public class ServidorSangue {
 				while (true) {
 					String entrada = in.readLine();
 					// responde a entrada do cliente
-					if (entrada.equals("listar tudo")) {
+					if (entrada.equalsIgnoreCase("listar tudo")) {
 						out.println(List(0));
-					} else if (entrada.equals("listar tipos")) {
+					} else if (entrada.equalsIgnoreCase("listar tipos")) {
 						out.println(List(1));
-					} else if (entrada.equals("listar estoque")) {
+					} else if (entrada.equalsIgnoreCase("listar estoque")) {
 						out.println(List(2));
-					} else if (entrada.equals("listar compatibilidade")) {
+					} else if (entrada.equalsIgnoreCase("listar compatibilidade")) {
 						out.println(List(3));
-					} else if (entrada.equals("desconectar")) {
+					} else if (entrada.equalsIgnoreCase("desconectar")) {
 						break;
-					} else if (entrada.equals("comandos")) {
+					} else if (entrada.equalsIgnoreCase("comandos")) {
 						out.println(instrucoes);
 					} else {
 						// separa a entrada do cliente a cada espaço encontrado
@@ -191,30 +221,24 @@ public class ServidorSangue {
 																	+ tipoSangue + " no banco de dados.\n");
 												} else {
 													if (operacao == 1) {
-														out.println(
-																"Não foi possível completar a operação. Provavelmente o valor a ser "
-																		+ "removido é maior do que o estoque para este tipo sanguíneo"
-																		+ " no banco de dados.\n");
+														out.println(erro501);
 													} else {
-														out.println("Não foi possível completar a operação.\n");
+														out.println(erro401);
 													}
 												}
 											} else
-												out.println("O valor precisa ser maior que 0.\n");
+												out.println(erro502);
 										} catch (Exception e) {
-											out.println("O valor informado é inválido.\n");
+											out.println(erro503);
 										}
 									} else
-										out.println(
-												"Tipo de sangue não reconhecido. Digite 'comandos' para ver os tipos válidos.\n");
+										out.println(erro504);
 								} else
-									out.println(
-											"Aparentemente a vírgula está faltando. Padrão: 'adicionar/remover TIPO, VALOR'.\n");
+									out.println(erro505);
 							} else
-								out.println(
-										"Comando não reconhecido. Digite 'comandos' para ver os comandos válidos.\n");
+								out.println(erro402);
 						} else
-							out.println("Comando não reconhecido. Digite 'comandos' para ver os comandos válidos.\n");
+							out.println(erro402);
 					}
 				}
 			} catch (IOException e) {
